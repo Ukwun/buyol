@@ -1,0 +1,76 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function membership(vendorId) {
+      return firestore.get(/databases/(default)/documents/vendorMemberships/$(vendorId + '_' + request.auth.uid));
+    }
+
+    function canManageVendor(vendorId, permission) {
+      return signedIn()
+        && firestore.get(/databases/(default)/documents/vendorStores/$(vendorId)).data.status == 'active'
+        && membership(vendorId).data.status == 'active'
+        && (membership(vendorId).data.role == 'owner'
+          || membership(vendorId).data.permissions[permission] == true);
+    }
+
+    function validImage() {
+      return request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp|gif)');
+    }
+
+    function validVerificationDocument() {
+      return request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('(image/(jpeg|png|webp)|application/pdf)');
+    }
+
+    match /users/{userId}/profile/{fileName=**} {
+      allow read: if signedIn() && request.auth.uid == userId;
+      allow write: if signedIn() && request.auth.uid == userId && validImage();
+    }
+
+    match /vendorApplications/{applicationId}/branding/{fileName=**} {
+      allow read: if signedIn()
+        && firestore.get(/databases/(default)/documents/vendorApplications/$(applicationId)).data.applicantUserId == request.auth.uid;
+      allow write: if signedIn()
+        && firestore.get(/databases/(default)/documents/vendorApplications/$(applicationId)).data.applicantUserId == request.auth.uid
+        && validImage();
+    }
+
+    match /vendorApplications/{applicationId}/verification/{fileName=**} {
+      allow read: if isAdmin()
+        || (signedIn() && firestore.get(/databases/(default)/documents/vendorApplications/$(applicationId)).data.applicantUserId == request.auth.uid);
+      allow write: if signedIn()
+        && firestore.get(/databases/(default)/documents/vendorApplications/$(applicationId)).data.applicantUserId == request.auth.uid
+        && validVerificationDocument();
+    }
+
+    match /vendors/{vendorId}/branding/{fileName=**} {
+      allow read: if resource != null;
+      allow write: if canManageVendor(vendorId, 'manageStore') && validImage();
+    }
+
+    match /products/{vendorId}/{listingId}/{fileName=**} {
+      allow read: if (firestore.get(/databases/(default)/documents/products/$(listingId)).data.publicationStatus == 'published'
+        && firestore.get(/databases/(default)/documents/products/$(listingId)).data.vendorId == vendorId
+        && firestore.get(/databases/(default)/documents/vendorStores/$(vendorId)).data.status == 'active')
+        || canManageVendor(vendorId, 'manageCatalog')
+        || isAdmin();
+      allow write: if canManageVendor(vendorId, 'manageCatalog')
+        && firestore.get(/databases/(default)/documents/products/$(listingId)).data.vendorId == vendorId
+        && validImage();
+    }
+
+    match /support/{ticketId}/{fileName=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

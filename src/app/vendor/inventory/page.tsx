@@ -1,0 +1,7 @@
+import { EmptyState } from "@/components/feedback";
+import { Badge, Card, CardBody } from "@/components/ui";
+import { requireCustomerSession } from "@/lib/auth/session";
+import { listInventory } from "@/features/inventory/server";
+import { InventoryAdjustmentForm } from "@/features/inventory/components";
+import styles from "./page.module.css";
+export default async function InventoryPage() { const user = await requireCustomerSession(); const inventory = await listInventory(user.uid); return <div className={styles.page}><div className={styles.heading}><h1>Inventory</h1><p>Availability is calculated as on-hand minus reserved. Cart operations never reserve stock.</p></div><InventoryAdjustmentForm />{!inventory.length ? <EmptyState title="No inventory records" description="Apply an adjustment above to initialize stock for an eligible product." /> : <Card><CardBody><div className={styles.table}>{inventory.map((item) => { const available = Math.max(0, item.onHand - item.reserved); const low = item.lowStockThreshold !== undefined && available <= item.lowStockThreshold; return <div className={styles.row} key={item.id}><div><strong>{item.sku}</strong><span>{item.listingId}{item.variantId ? ` / ${item.variantId}` : ""}</span></div><span>On hand {item.onHand}</span><span>Reserved {item.reserved}</span><span className={available === 0 ? styles.out : low ? styles.low : ""}>Available {available} {available === 0 ? <Badge variant="danger">Out</Badge> : low ? <Badge variant="warning">Low</Badge> : null}</span></div>; })}</div></CardBody></Card>}</div>; }

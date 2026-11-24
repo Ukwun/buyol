@@ -1,0 +1,27 @@
+.error {
+  display: grid;
+  min-height: 60vh;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--gutter-inline);
+  text-align: center;
+}
+
+.icon {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.error h1 {
+  font-size: var(--font-size-3xl);
+}
+
+.error p {
+  max-width: 32rem;
+}

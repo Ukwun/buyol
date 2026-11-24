@@ -1,0 +1,23 @@
+.page {
+  display: grid;
+  min-height: 70vh;
+  width: min(calc(100% - (var(--gutter-inline) * 2)), 48rem);
+  align-items: center;
+  margin-inline: auto;
+}
+
+.link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  border-radius: var(--radius-md);
+  background: var(--color-brand-primary);
+  padding: var(--space-3) var(--space-5);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.link:hover {
+  background: var(--color-brand-primary-hover);
+}

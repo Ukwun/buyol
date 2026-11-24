@@ -1,0 +1,6 @@
+import { NextResponse } from "next/server";
+import { getAuthenticatedServerUser } from "@/lib/auth/session";
+import { assertSameOrigin } from "@/lib/security/csrf";
+import { deleteAddress, saveAddress } from "@/features/checkout/addresses";
+export async function PATCH(request: Request, { params }: { params: Promise<{ addressId: string }> }) { try { assertSameOrigin(request); const user = await getAuthenticatedServerUser(); if (!user) return NextResponse.json({ error: "Authentication required." }, { status: 401 }); return NextResponse.json({ address: await saveAddress(user.uid, await request.json(), (await params).addressId) }); } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to update address." }, { status: 400 }); } }
+export async function DELETE(request: Request, { params }: { params: Promise<{ addressId: string }> }) { try { assertSameOrigin(request); const user = await getAuthenticatedServerUser(); if (!user) return NextResponse.json({ error: "Authentication required." }, { status: 401 }); await deleteAddress(user.uid, (await params).addressId); return NextResponse.json({ success: true }); } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to delete address." }, { status: 400 }); } }

@@ -1,0 +1,66 @@
+.card {
+  width: 100%;
+}
+
+.header {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.header h1 {
+  font-size: clamp(var(--font-size-2xl), 5vw, var(--font-size-4xl));
+}
+
+.header p {
+  font-size: var(--font-size-sm);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.passwordField {
+  position: relative;
+}
+
+.passwordField input {
+  padding-right: 3.25rem;
+}
+
+.togglePassword {
+  position: absolute;
+  top: 0.55rem;
+  right: var(--space-2);
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.togglePassword:hover {
+  background: var(--color-surface-subtle);
+  color: var(--color-text-primary);
+}
+
+.footer {
+  margin-top: var(--space-6);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.link {
+  color: var(--color-brand-primary-hover);
+  font-weight: var(--font-weight-semibold);
+}
+
+.link:hover {
+  color: var(--color-brand-primary);
+  text-decoration: underline;
+}

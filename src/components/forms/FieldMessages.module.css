@@ -1,0 +1,18 @@
+.messages {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.messages p {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}
+
+.helper {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--color-danger);
+}

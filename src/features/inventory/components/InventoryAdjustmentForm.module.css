@@ -1,0 +1,1 @@
+.form { display: grid; gap: var(--space-4); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); padding: var(--space-5); background: var(--color-surface-raised); }

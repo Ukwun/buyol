@@ -1,0 +1,240 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function membership(vendorId) {
+      return get(/databases/$(database)/documents/vendorMemberships/$(vendorId + '_' + request.auth.uid));
+    }
+
+    function hasVendorPermission(vendorId, permission) {
+      return signedIn()
+        && membership(vendorId).data.status == 'active'
+        && (membership(vendorId).data.role == 'owner'
+          || membership(vendorId).data.permissions[permission] == true);
+    }
+
+    function activeVendor(vendorId) {
+      return get(/databases/$(database)/documents/vendorStores/$(vendorId)).data.status == 'active';
+    }
+
+    function ownsUser(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function ownsVendorOrder(vendorOrderId) {
+      return signedIn()
+        && get(/databases/$(database)/documents/vendorOrders/$(vendorOrderId)).data.customerId == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow read: if ownsUser(userId) || isAdmin();
+      allow update: if ownsUser(userId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'displayName', 'photoUrl', 'countryCode', 'defaultCurrency', 'updatedAt'
+        ])
+        && request.resource.data.status == resource.data.status;
+    }
+
+    match /users/{userId}/addresses/{addressId} {
+      allow read: if ownsUser(userId);
+    }
+
+    match /users/{userId}/notifications/{notificationId} {
+      allow read: if ownsUser(userId) || isAdmin();
+      allow update: if ownsUser(userId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readAt']);
+    }
+
+    match /vendorStores/{vendorId} {
+      allow read: if resource.data.status == 'active'
+        || hasVendorPermission(vendorId, 'manageStore')
+        || isAdmin();
+      allow update: if hasVendorPermission(vendorId, 'manageStore')
+        && request.resource.data.ownerUserId == resource.data.ownerUserId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'name', 'slug', 'description', 'logoUrl', 'countryCode', 'settlementCurrency', 'updatedAt'
+        ]);
+    }
+
+    match /vendorMemberships/{membershipId} {
+      allow read: if isAdmin()
+        || (signedIn() && resource.data.userId == request.auth.uid)
+        || (signedIn() && resource.data.vendorId != null && hasVendorPermission(resource.data.vendorId, 'manageStore'));
+    }
+
+    match /vendorApplications/{applicationId} {
+      allow get: if isAdmin() || (signedIn() && resource.data.applicantUserId == request.auth.uid);
+      allow list: if isAdmin();
+      // Application creation, draft updates, submission and review are trusted-server operations.
+    }
+
+    match /vendorVerifications/{verificationId} {
+      allow get: if isAdmin() || (signedIn() && resource.data.applicantUserId == request.auth.uid);
+      allow list: if isAdmin();
+      // Verification writes are trusted-server operations after restricted document uploads.
+    }
+
+    match /categories/{categoryId} {
+      allow read: if resource.data.status == 'active' || isAdmin();
+    }
+
+    match /products/{listingId} {
+      allow read: if (resource.data.publicationStatus == 'published' && activeVendor(resource.data.vendorId))
+        || hasVendorPermission(resource.data.vendorId, 'manageCatalog')
+        || isAdmin();
+      allow update: if hasVendorPermission(resource.data.vendorId, 'manageCatalog')
+        && resource.data.publicationStatus != 'pending'
+        && (resource.data.publicationStatus == 'published' || request.resource.data.publicationStatus != 'published')
+        && request.resource.data.vendorId == resource.data.vendorId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'title', 'description', 'shortDescription', 'brand', 'sku', 'tags', 'attributes', 'slug', 'images', 'categoryIds', 'inventoryPolicy',
+          'publicationStatus', 'supplierSource', 'ratingAverage', 'reviewCount', 'updatedAt'
+        ]);
+
+      match /variants/{variantId} {
+        allow read: if (get(/databases/$(database)/documents/products/$(listingId)).data.publicationStatus == 'published'
+          && activeVendor(get(/databases/$(database)/documents/products/$(listingId)).data.vendorId))
+          || hasVendorPermission(get(/databases/$(database)/documents/products/$(listingId)).data.vendorId, 'manageCatalog')
+          || isAdmin();
+        allow create, update, delete: if hasVendorPermission(get(/databases/$(database)/documents/products/$(listingId)).data.vendorId, 'manageCatalog')
+          && get(/databases/$(database)/documents/products/$(listingId)).data.publicationStatus != 'pending';
+      }
+    }
+
+    match /supplierProducts/{supplierProductId} {
+      allow read: if isAdmin();
+    }
+
+    match /suppliers/{supplierId} {
+      allow read: if isAdmin();
+    }
+
+    match /productImports/{importId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.requestedByUserId == request.auth.uid);
+    }
+
+    match /supplierPrices/{priceId} {
+      allow read: if isAdmin();
+    }
+
+    match /inventory/{inventoryId} {
+      allow read: if isAdmin() || hasVendorPermission(resource.data.vendorId, 'manageInventory');
+      // Inventory writes are trusted-server operations only.
+    }
+
+    match /inventory/{inventoryId}/reservations/{reservationId} {
+      allow read: if isAdmin() || ownsUser(resource.data.customerId)
+        || hasVendorPermission(get(/databases/$(database)/documents/inventory/$(inventoryId)).data.vendorId, 'manageInventory');
+    }
+
+    match /carts/{customerId} {
+      allow read: if ownsUser(customerId);
+      match /items/{itemId} {
+        allow read: if ownsUser(customerId);
+      }
+    }
+
+    match /wishlists/{customerId} {
+      allow read: if ownsUser(customerId);
+      match /items/{listingId} {
+        allow read: if ownsUser(customerId);
+      }
+    }
+
+    match /orders/{orderId} {
+      allow read: if ownsUser(resource.data.customerId) || isAdmin();
+      // Parent order writes are trusted-server operations only.
+      match /events/{eventId} {
+        allow read: if ownsUser(get(/databases/$(database)/documents/orders/$(orderId)).data.customerId) || isAdmin();
+      }
+    }
+
+    match /vendorOrders/{vendorOrderId} {
+      allow read: if ownsUser(resource.data.customerId)
+        || hasVendorPermission(resource.data.vendorId, 'manageOrders')
+        || isAdmin();
+      // Vendor order writes are trusted-server operations only.
+      match /events/{eventId} {
+        allow read: if ownsUser(get(/databases/$(database)/documents/vendorOrders/$(vendorOrderId)).data.customerId)
+          || hasVendorPermission(get(/databases/$(database)/documents/vendorOrders/$(vendorOrderId)).data.vendorId, 'manageOrders')
+          || isAdmin();
+      }
+    }
+
+    match /fulfillmentAddresses/{addressId} {
+      allow get: if ownsUser(resource.data.customerId)
+        || hasVendorPermission(resource.data.vendorId, 'manageOrders')
+        || isAdmin();
+    }
+
+    match /payments/{paymentId} {
+      allow read: if ownsUser(resource.data.customerId) || isAdmin();
+    }
+
+    match /paymentEvents/{eventId} {
+      allow read: if isAdmin();
+    }
+
+      match /reconciliationExceptions/{exceptionId} {
+        allow read: if isAdmin();
+      }
+
+    match /refunds/{refundId} {
+      allow read: if isAdmin()
+        || ownsUser(get(/databases/$(database)/documents/orders/$(resource.data.parentOrderId)).data.customerId);
+    }
+
+    match /commissions/{commissionId} {
+      allow read: if isAdmin() || hasVendorPermission(resource.data.vendorId, 'viewFinance');
+    }
+
+    match /settlements/{settlementId} {
+      allow read: if isAdmin() || hasVendorPermission(resource.data.vendorId, 'viewFinance');
+      match /entries/{entryId} {
+        allow read: if isAdmin() || hasVendorPermission(resource.data.vendorId, 'viewFinance');
+      }
+    }
+
+    match /shipments/{shipmentId} {
+      allow get: if isAdmin()
+        || hasVendorPermission(resource.data.vendorId, 'manageOrders')
+        || ownsVendorOrder(resource.data.vendorOrderId);
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if resource.data.status == 'published'
+        || ownsUser(resource.data.customerId)
+        || isAdmin();
+    }
+
+    match /promotions/{promotionId} {
+      allow read: if resource.data.status == 'active'
+        || isAdmin()
+        || (resource.data.ownerType == 'vendor' && hasVendorPermission(resource.data.ownerId, 'manageStore'));
+    }
+
+    match /supportTickets/{ticketId} {
+      allow read: if isAdmin()
+        || (signedIn() && resource.data.customerId == request.auth.uid)
+        || (resource.data.vendorId != null && hasVendorPermission(resource.data.vendorId, 'manageSupport'));
+    }
+
+    match /disputes/{disputeId} {
+      allow read: if isAdmin()
+        || (signedIn() && resource.data.customerId == request.auth.uid)
+        || (resource.data.vendorId != null && hasVendorPermission(resource.data.vendorId, 'manageSupport'));
+    }
+
+    match /auditLogs/{auditLogId} {
+      allow read: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,4 @@
+import { NextResponse } from "next/server";
+import { getAuthenticatedServerUser } from "@/lib/auth/session";
+import { verifyPaymentForCustomer } from "@/features/payments/server";
+export async function POST(request: Request, context: { params: Promise<{ paymentId: string }> }) { try { const user = await getAuthenticatedServerUser(); if (!user) return NextResponse.json({ error: "Authentication required." }, { status: 401 }); const { paymentId } = await context.params; const body = await request.json().catch(() => ({})) as { providerTransactionId?: unknown }; const providerTransactionId = typeof body.providerTransactionId === "string" ? body.providerTransactionId : undefined; return NextResponse.json(await verifyPaymentForCustomer(user.uid, paymentId, providerTransactionId)); } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to verify payment." }, { status: 400 }); } }
