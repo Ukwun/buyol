@@ -10,6 +10,7 @@ import { FormField, Input } from "@/components/forms";
 import { getFirebaseAuth } from "@/lib/firebase/client";
 import { getSafeRedirectPath } from "@/lib/auth/redirect";
 import styles from "./AuthForm.module.css";
+import { SocialAuthButtons } from "./SocialAuthButtons";
 
 export function SignInForm() {
   const [email, setEmail] = useState("");
@@ -79,6 +80,7 @@ export function SignInForm() {
           </FormField>
           <Button type="submit" size="large" loading={busy} startIcon={<LogIn size={18} aria-hidden="true" />}>Sign in</Button>
         </form>
+        <SocialAuthButtons />
         <p className={styles.footer}><Link className={styles.link} href="/reset-password">Forgot your password?</Link><br />Don&apos;t have an account? <Link className={styles.link} href="/sign-up">Create one</Link></p>
       </CardBody>
     </Card>

@@ -25,6 +25,7 @@ export async function POST(request: Request) {
           id: decoded.uid,
           email: decoded.email,
           displayName: body.displayName ?? decoded.name,
+          phoneNumber: body.phoneNumber,
           countryCode: body.countryCode,
           defaultCurrency: body.defaultCurrency,
           status: "active",
@@ -39,6 +40,7 @@ export async function POST(request: Request) {
       transaction.update(userReference, {
         email: decoded.email,
         ...(body.displayName ? { displayName: body.displayName } : {}),
+        ...(body.phoneNumber ? { phoneNumber: body.phoneNumber } : {}),
         ...(body.countryCode ? { countryCode: body.countryCode } : {}),
         ...(body.defaultCurrency ? { defaultCurrency: body.defaultCurrency } : {}),
         status: existing.status ?? "active",

@@ -14,6 +14,7 @@ export interface UserDocument {
   id: string;
   email: string;
   displayName?: string;
+    phoneNumber?: string;
   photoUrl?: string;
   countryCode?: string;
   defaultCurrency?: CurrencyCode;

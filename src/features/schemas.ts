@@ -7,7 +7,7 @@ const moneySchema = z.object({ amountMinor: z.number().int().safe(), currency: c
 const imageSchema = z.object({ url: z.string().url().optional(), alt: z.string().max(200).optional(), storagePath: z.string().optional(), sortOrder: z.number().int().nonnegative().optional(), isPrimary: z.boolean().optional() });
 
 export const userSchema = z.object({
-  id: z.string().min(1), email: z.string().email(), displayName: z.string().optional(), photoUrl: z.string().url().optional(),
+  id: z.string().min(1), email: z.string().email(), displayName: z.string().optional(), phoneNumber: z.string().trim().min(5).max(30).optional(), photoUrl: z.string().url().optional(),
   countryCode: z.string().length(2).optional(), defaultCurrency: currencySchema.optional(), status: z.enum(["active", "suspended", "deleted"]),
   createdAt: timestampSchema, updatedAt: timestampSchema,
 });
