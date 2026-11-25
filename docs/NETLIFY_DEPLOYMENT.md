@@ -4,7 +4,7 @@ BUYOL is a Next.js App Router application. Netlify should build it from the repo
 
 - Build command: `npm run build`
 - Publish directory: `.next`
-- Node version: `20`
+- Node version: `24.12.0`
 
 The checked-in `netlify.toml` contains these settings. Netlify supports the App Router, server-rendered routes and API routes through its Next.js runtime.
 
