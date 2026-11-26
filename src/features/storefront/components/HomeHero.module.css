@@ -1,0 +1,28 @@
+.hero { position: relative; display: grid; min-height: 34rem; grid-template-columns: minmax(0, 1fr) minmax(20rem, .9fr); align-items: center; overflow: hidden; border-radius: var(--radius-2xl); background: linear-gradient(120deg, #0c174c 0%, #102c91 55%, #244fd2 100%); color: white; isolation: isolate; }
+.hero::after { position: absolute; inset: auto 0 0; z-index: -1; height: 35%; background: linear-gradient(transparent, rgba(1, 7, 35, .38)); content: ""; }
+.copy { z-index: 1; max-width: 42rem; padding: clamp(var(--space-8), 7vw, var(--space-16)); animation: enter .55s var(--ease-standard) both; }
+.eyebrow { margin: 0 0 var(--space-4); color: var(--accent); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); letter-spacing: .14em; text-transform: uppercase; }
+.copy h1 { max-width: 38rem; margin: 0; color: white; font-size: clamp(3rem, 6vw, 6.5rem); letter-spacing: -.08em; line-height: .91; }
+.copy h1 span { display: block; }
+.description { max-width: 28rem; margin: var(--space-6) 0 0; color: rgba(255,255,255,.75); font-size: var(--font-size-lg); line-height: var(--line-height-relaxed); }
+.actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-8); }
+.primary,.secondary { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; gap: var(--space-2); border-radius: var(--radius-pill); padding: var(--space-3) var(--space-5); font-weight: var(--font-weight-bold); text-decoration: none; transition: transform var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard); }
+.primary { background: var(--accent); color: #101a48; }
+.secondary { border: 1px solid rgba(255,255,255,.28); color: white; }
+.primary:hover,.secondary:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.visual { position: relative; align-self: stretch; min-height: 34rem; animation: reveal .75s var(--ease-standard) both; }
+.glow { position: absolute; top: 10%; right: 8%; width: min(32rem, 75%); aspect-ratio: 1; border-radius: 50%; background: var(--accent); opacity: .22; filter: blur(1px); }
+.person { position: absolute; right: -8%; bottom: -5%; width: min(42rem, 120%); height: 100%; object-fit: contain; object-position: bottom center; filter: drop-shadow(0 2rem 2rem rgba(0,0,0,.32)); }
+.note { position: absolute; right: 9%; bottom: 14%; display: grid; gap: var(--space-1); max-width: 10rem; transform: rotate(4deg); border: 1px solid rgba(255,255,255,.22); border-radius: var(--radius-lg); background: rgba(7, 16, 62, .65); padding: var(--space-3); backdrop-filter: blur(12px); }
+.note span { color: var(--accent); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); letter-spacing: .14em; }
+.note strong { color: white; font-size: var(--font-size-sm); }
+.controls { position: absolute; right: var(--space-6); bottom: var(--space-6); z-index: 2; display: flex; align-items: center; gap: var(--space-3); }
+.arrow { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid rgba(255,255,255,.24); border-radius: var(--radius-pill); background: rgba(255,255,255,.1); color: white; cursor: pointer; }
+.dots { display: flex; align-items: center; gap: var(--space-2); }
+.dot,.activeDot { width: .45rem; height: .45rem; border: 0; border-radius: var(--radius-pill); background: rgba(255,255,255,.4); cursor: pointer; transition: width var(--duration-normal) var(--ease-standard), background var(--duration-normal) var(--ease-standard); }
+.activeDot { width: 1.8rem; background: var(--accent); }
+@keyframes enter { from { opacity: 0; transform: translateX(-1.5rem); } to { opacity: 1; transform: translateX(0); } }
+@keyframes reveal { from { opacity: 0; transform: translateX(1rem) scale(.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
+@media (max-width: 52rem) { .hero { min-height: 42rem; grid-template-columns: 1fr; } .copy { align-self: start; padding-bottom: 0; } .visual { min-height: 18rem; } .person { right: 5%; width: 70%; height: 24rem; } .note { right: 7%; bottom: 18%; } .controls { bottom: var(--space-4); } }
+@media (max-width: 36rem) { .hero { min-height: 40rem; border-radius: var(--radius-xl); } .copy { padding: var(--space-8) var(--space-5) 0; } .copy h1 { font-size: clamp(2.8rem, 15vw, 4.5rem); } .description { font-size: var(--font-size-md); } .visual { min-height: 17rem; } .person { right: 0; width: 82%; } .note { right: 5%; bottom: 20%; } .controls { right: var(--space-4); } }
+@media (prefers-reduced-motion: reduce) { .copy,.visual { animation: none; } .primary,.secondary,.dot,.activeDot { transition: none; } }
