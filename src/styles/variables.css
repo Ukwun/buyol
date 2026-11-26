@@ -110,13 +110,6 @@
   --z-toast: 120;
 }
 
-@theme inline {
-  --color-background: var(--color-background);
-  --color-foreground: var(--color-text-primary);
-  --font-sans: var(--font-family-sans);
-  --font-mono: var(--font-family-mono);
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
