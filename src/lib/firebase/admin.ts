@@ -31,6 +31,18 @@ function getAdminCredential() {
     });
   }
 
+  const hasApplicationDefaultCredentials = Boolean(
+    process.env.GOOGLE_APPLICATION_CREDENTIALS ||
+      process.env.GOOGLE_CLOUD_PROJECT ||
+      process.env.GCLOUD_PROJECT,
+  );
+
+  if (!hasApplicationDefaultCredentials) {
+    throw new Error(
+      "Firebase Admin is not configured. Set FIREBASE_ADMIN_PROJECT_ID, FIREBASE_ADMIN_CLIENT_EMAIL and FIREBASE_ADMIN_PRIVATE_KEY, or configure GOOGLE_APPLICATION_CREDENTIALS.",
+    );
+  }
+
   return applicationDefault();
 }
 
