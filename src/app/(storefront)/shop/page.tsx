@@ -10,6 +10,7 @@ import { HomeHero } from "@/features/storefront/components";
 import styles from "../page.module.css";
 
 export const metadata: Metadata = { title: "BUYOL | Global marketplace" };
+export const instant = false;
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string }> }) {
   const params = await searchParams;

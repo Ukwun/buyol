@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { LayoutDashboard } from "lucide-react";
 import type { NavigationItem } from "@/config/navigation";
@@ -20,7 +21,7 @@ export function DashboardShell({ area, title, navigationItems, children }: Dashb
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
         <Link className={styles.logo} href="/" aria-label={`${siteConfig.name} home`}>
-          <span className={styles.logoMark}>B</span>
+          <Image className={styles.logoImage} src="/brand/buyol-logo.png" alt="" width={40} height={40} />
           <span>{siteConfig.name}</span>
         </Link>
         <div className={styles.areaLabel}>{area}</div>

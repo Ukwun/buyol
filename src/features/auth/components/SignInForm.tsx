@@ -48,6 +48,7 @@ export function SignInForm() {
       });
       if (!sessionResponse.ok) throw new Error("Unable to create a secure session.");
 
+      await signOut(auth);
       const redirectTo = getSafeRedirectPath(new URLSearchParams(window.location.search).get("redirect"));
       window.location.assign(redirectTo);
     } catch {
@@ -65,7 +66,7 @@ export function SignInForm() {
           <p>Sign in to continue to your BUYOL account.</p>
         </div>
         {error ? <Alert variant="error" icon={<LockKeyhole size={18} />}>{error}</Alert> : null}
-        <form className={styles.form} onSubmit={submit} noValidate>
+        <form className={styles.form} onSubmit={submit}>
           <FormField controlId="sign-in-email" label="Email address" required>
             <Input id="sign-in-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
           </FormField>

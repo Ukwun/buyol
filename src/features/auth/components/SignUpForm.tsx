@@ -60,12 +60,12 @@ export function SignUpForm() {
       <CardBody>
         <div className={styles.header}><h1>Create your account.</h1><p>Join the global BUYOL marketplace.</p></div>
         {error ? <Alert variant="error">{error}</Alert> : null}
-        <form className={styles.form} onSubmit={submit} noValidate>
+        <form className={styles.form} onSubmit={submit}>
           <FormField controlId="sign-up-name" label="Your name" required><Input id="sign-up-name" autoComplete="name" value={displayName} onChange={(event) => setDisplayName(event.target.value)} required /></FormField>
           <FormField controlId="sign-up-email" label="Email address" required><Input id="sign-up-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></FormField>
           <FormField controlId="sign-up-phone" label="Phone number" required><Input id="sign-up-phone" type="tel" autoComplete="tel" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} required /></FormField>
           <FormField controlId="sign-up-password" label="Password" description="Use at least 8 characters." required>
-            <div className={styles.passwordField}><Input id="sign-up-password" type={showPassword ? "text" : "password"} autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} required /><button className={styles.togglePassword} type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((value) => !value)}>{showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}</button></div>
+            <div className={styles.passwordField}><Input id="sign-up-password" type={showPassword ? "text" : "password"} autoComplete="new-password" minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} required /><button className={styles.togglePassword} type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((value) => !value)}>{showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}</button></div>
           </FormField>
           <FormField controlId="sign-up-confirm-password" label="Confirm password" required><Input id="sign-up-confirm-password" type={showPassword ? "text" : "password"} autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required /></FormField>
           <Button type="submit" size="large" loading={busy} startIcon={<UserPlus size={18} aria-hidden="true" />}>Create account</Button>

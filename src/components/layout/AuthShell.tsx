@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import styles from "./AuthShell.module.css";
@@ -12,7 +13,7 @@ export function AuthShell({ children }: AuthShellProps) {
     <div className={styles.shell}>
       <header className={styles.header}>
         <Link className={styles.logo} href="/" aria-label={`${siteConfig.name} home`}>
-          <span className={styles.logoMark}>B</span>
+          <Image className={styles.logoImage} src="/brand/buyol-logo.png" alt="" width={40} height={40} />
           <span>{siteConfig.name}</span>
         </Link>
       </header>

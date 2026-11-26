@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { NavigationItem } from "@/config/navigation";
@@ -13,7 +14,7 @@ export function SiteHeader({ navigationItems }: SiteHeaderProps) {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link className={styles.logo} href="/" aria-label={`${siteConfig.name} home`}>
-          <span className={styles.logoMark}>B</span>
+          <Image className={styles.logoImage} src="/brand/buyol-logo.png" alt="" width={40} height={40} />
           <span>{siteConfig.name}</span>
         </Link>
         <nav className={styles.navigation} aria-label="Main navigation">

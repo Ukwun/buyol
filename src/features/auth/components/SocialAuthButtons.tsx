@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup } from "firebase/auth";
+import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { Alert } from "@/components/feedback";
 import { Button } from "@/components/ui";
 import { getSafeRedirectPath } from "@/lib/auth/redirect";
@@ -18,14 +18,16 @@ export function SocialAuthButtons() {
     setBusy(providerName);
     setError(null);
     try {
+      const auth = getFirebaseAuth();
       const provider = providerName === "google" ? new GoogleAuthProvider() : providerName === "facebook" ? new FacebookAuthProvider() : new OAuthProvider("apple.com");
-      const credential = await signInWithPopup(getFirebaseAuth(), provider);
+      const credential = await signInWithPopup(auth, provider);
       if (!credential.user.email || !credential.user.emailVerified) throw new Error("This provider did not return a verified email address.");
       const idToken = await credential.user.getIdToken();
       const syncResponse = await fetch("/api/auth/sync-user", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ idToken, displayName: credential.user.displayName ?? undefined }) });
       if (!syncResponse.ok) throw new Error("Unable to prepare your account.");
       const sessionResponse = await fetch("/api/auth/session", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ idToken }) });
       if (!sessionResponse.ok) throw new Error("Unable to create a secure session.");
+      await signOut(auth);
       window.location.assign(getSafeRedirectPath(new URLSearchParams(window.location.search).get("redirect")));
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "This sign-in provider is unavailable.");

@@ -3,6 +3,8 @@ import { navigation } from "@/config/navigation";
 import { DashboardShell } from "@/components/layout";
 import { requireCustomerSession } from "@/lib/auth/session";
 
+export const instant = false;
+
 export default async function AccountLayout({ children }: { children: ReactNode }) {
   await requireCustomerSession();
   return (

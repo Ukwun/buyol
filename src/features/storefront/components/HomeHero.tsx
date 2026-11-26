@@ -29,7 +29,7 @@ export function HomeHero() {
         <p className={styles.description}>{slide.description}</p>
         <div className={styles.actions}><Link className={styles.primary} href="#catalog">Explore the marketplace <ArrowRight size={18} aria-hidden="true" /></Link><Link className={styles.secondary} href="/vendor">Sell on BUYOL</Link></div>
       </div>
-      <div className={styles.visual} key={`visual-${active}`}><div className={styles.glow} /><Image className={styles.person} src={slide.image} alt="" width={720} height={720} priority={active === 0} /><div className={styles.note}><span>BUYOL</span><strong>Something for everyone.</strong></div></div>
+      <div className={styles.visual} key={`visual-${active}`}><div className={styles.glow} /><Image className={styles.person} src={slide.image} alt="" width={720} height={720} loading="eager" /><div className={styles.note}><span>BUYOL</span><strong>Something for everyone.</strong></div></div>
       <div className={styles.controls}><button type="button" className={styles.arrow} onClick={() => setActive((current) => (current - 1 + slides.length) % slides.length)} aria-label="Previous banner"><ChevronLeft size={18} aria-hidden="true" /></button><div className={styles.dots} aria-label={`Banner ${active + 1} of ${slides.length}`}>{slides.map((item, index) => <button type="button" key={item.image} className={index === active ? styles.activeDot : styles.dot} onClick={() => setActive(index)} aria-label={`Show banner ${index + 1}`} aria-current={index === active ? "true" : undefined} />)}</div><button type="button" className={styles.arrow} onClick={() => setActive((current) => (current + 1) % slides.length)} aria-label="Next banner"><ChevronRight size={18} aria-hidden="true" /></button></div>
     </section>
   );
