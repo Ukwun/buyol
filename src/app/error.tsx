@@ -19,7 +19,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
     <main className={styles.error} role="alert">
       <div className={styles.icon}><AlertTriangle size={28} aria-hidden="true" /></div>
       <h1>Something went wrong.</h1>
-      <p>We could not load this part of BUYOL. Please try again.</p>
+      <p>We could not load this part of BUYLO. Please try again.</p>
       <Button variant="primary" onClick={reset}>Try again</Button>
     </main>
   );

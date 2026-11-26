@@ -14,7 +14,7 @@ export function SiteHeader({ navigationItems }: SiteHeaderProps) {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link className={styles.logo} href="/" aria-label={`${siteConfig.name} home`}>
-          <Image className={styles.logoImage} src="/brand/buyol-logo.png" alt="" width={40} height={40} />
+          <Image className={styles.logoImage} src="/brand/buylo-logo.png" alt="" width={40} height={40} />
           <span>{siteConfig.name}</span>
         </Link>
         <nav className={styles.navigation} aria-label="Main navigation">

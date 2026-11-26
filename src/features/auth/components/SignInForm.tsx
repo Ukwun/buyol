@@ -63,7 +63,7 @@ export function SignInForm() {
       <CardBody>
         <div className={styles.header}>
           <h1>Welcome back.</h1>
-          <p>Sign in to continue to your BUYOL account.</p>
+          <p>Sign in to continue to your BUYLO account.</p>
         </div>
         {error ? <Alert variant="error" icon={<LockKeyhole size={18} />}>{error}</Alert> : null}
         <form className={styles.form} onSubmit={submit}>

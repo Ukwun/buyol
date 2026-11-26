@@ -21,7 +21,7 @@ export function DashboardShell({ area, title, navigationItems, children }: Dashb
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
         <Link className={styles.logo} href="/" aria-label={`${siteConfig.name} home`}>
-          <Image className={styles.logoImage} src="/brand/buyol-logo.png" alt="" width={40} height={40} />
+          <Image className={styles.logoImage} src="/brand/buylo-logo.png" alt="" width={40} height={40} />
           <span>{siteConfig.name}</span>
         </Link>
         <div className={styles.areaLabel}>{area}</div>

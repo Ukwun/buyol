@@ -1,4 +1,4 @@
-# BUYOL authentication setup
+# BUYLO authentication setup
 
 Stage 4D implements Firebase email/password authentication and server-side Firebase session cookies. It does not implement vendor onboarding, checkout, payments, or Google sign-in.
 

@@ -10,7 +10,7 @@ export default function NotFound() {
         icon={<SearchX size={24} />}
         title="This page could not be found."
         description="The page may have moved, or the address may be incorrect."
-        action={<Link className={styles.link} href="/">Return to BUYOL</Link>}
+        action={<Link className={styles.link} href="/">Return to BUYLO</Link>}
       />
     </main>
   );

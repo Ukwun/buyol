@@ -1,11 +1,11 @@
 export const siteConfig = {
-  name: "BUYOL",
+  name: "BUYLO",
   metadata: {
-    title: "BUYOL | Global marketplace",
+    title: "BUYLO | Global marketplace",
     description: "A bold global marketplace connecting customers, vendors and suppliers.",
     icons: {
-      icon: "/brand/buyol-logo.png",
-      apple: "/brand/buyol-logo.png",
+      icon: "/brand/buylo-logo.png",
+      apple: "/brand/buylo-logo.png",
     },
   },
 } as const;

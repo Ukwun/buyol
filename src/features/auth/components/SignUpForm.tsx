@@ -58,7 +58,7 @@ export function SignUpForm() {
   return (
     <Card className={styles.card}>
       <CardBody>
-        <div className={styles.header}><h1>Create your account.</h1><p>Join the global BUYOL marketplace.</p></div>
+        <div className={styles.header}><h1>Create your account.</h1><p>Join the global BUYLO marketplace.</p></div>
         {error ? <Alert variant="error">{error}</Alert> : null}
         <form className={styles.form} onSubmit={submit}>
           <FormField controlId="sign-up-name" label="Your name" required><Input id="sign-up-name" autoComplete="name" value={displayName} onChange={(event) => setDisplayName(event.target.value)} required /></FormField>

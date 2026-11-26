@@ -1,6 +1,6 @@
 # Netlify deployment
 
-BUYOL is a Next.js App Router application. Netlify should build it from the repository root with:
+BUYLO is a Next.js App Router application. Netlify should build it from the repository root with:
 
 - Build command: `npm run build`
 - Publish directory: `.next`

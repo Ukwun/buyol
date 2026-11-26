@@ -107,4 +107,4 @@ export function VendorApplicationForm({ email, existing }: { email: string; exis
   );
 }
 
-function StatusPanel({ status }: { status?: string }) { return <Card><CardBody><div className={styles.summary}><h2 className={styles.sectionTitle}>Application under review</h2><div className={styles.summaryRow}><span className={styles.summaryLabel}>Status</span><span className={styles.summaryValue}>{status === "under_review" ? "Under review" : "Submitted"}</span></div><p className={styles.sectionDescription}>An authorized BUYOL reviewer will update your application. You cannot change its review status.</p></div></CardBody></Card>; }
+function StatusPanel({ status }: { status?: string }) { return <Card><CardBody><div className={styles.summary}><h2 className={styles.sectionTitle}>Application under review</h2><div className={styles.summaryRow}><span className={styles.summaryLabel}>Status</span><span className={styles.summaryValue}>{status === "under_review" ? "Under review" : "Submitted"}</span></div><p className={styles.sectionDescription}>An authorized BUYLO reviewer will update your application. You cannot change its review status.</p></div></CardBody></Card>; }

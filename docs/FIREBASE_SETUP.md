@@ -1,15 +1,15 @@
-# Firebase setup for BUYOL
+# Firebase setup for BUYLO
 
 This document covers the Stage 4A Firebase infrastructure only. Authentication flows, Firestore data models, Security Rules, Storage Rules, and Cloud Functions are intentionally not implemented yet.
 
 ## 1. Create a Firebase project
 
 1. Open the [Firebase Console](https://console.firebase.google.com/).
-2. Create a project for BUYOL.
+2. Create a project for BUYLO.
 3. Keep development and production projects separate.
 4. Enable billing when required by the Firebase services you plan to use.
 
-## 2. Register the BUYOL web application
+## 2. Register the BUYLO web application
 
 1. Open Project settings.
 2. Add a Web app to the Firebase project.
@@ -33,7 +33,7 @@ From Firebase Console:
 
 1. Open Build > Authentication.
 2. Select Get started.
-3. Enable only the sign-in providers BUYOL has approved.
+3. Enable only the sign-in providers BUYLO has approved.
 
 Authentication UI and account workflows are intentionally deferred to a later stage.
 
@@ -73,14 +73,14 @@ The Admin SDK is available only through `src/lib/firebase/admin.ts`. It is not i
 
 ### Deployed environments
 
-Use Application Default Credentials where the hosting environment supports them. Configure the hosting platform's service identity with only the permissions BUYOL requires. Do not upload service-account JSON files to the repository.
+Use Application Default Credentials where the hosting environment supports them. Configure the hosting platform's service identity with only the permissions BUYLO requires. Do not upload service-account JSON files to the repository.
 
 ### Local development with Application Default Credentials
 
 Install and authenticate the Google Cloud CLI, then set an untracked credential path:
 
 ```powershell
-$env:GOOGLE_APPLICATION_CREDENTIALS = "C:\secure\buyol-service-account.json"
+$env:GOOGLE_APPLICATION_CREDENTIALS = "C:\secure\buylo-service-account.json"
 ```
 
 The file must remain outside the repository or match the ignored service-account patterns.

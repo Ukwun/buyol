@@ -1,4 +1,4 @@
-# BUYOL payment architecture
+# BUYLO payment architecture
 
 The parent order is the customer payment aggregation unit. Each payment attempt is an immutable attempt history record under `payments`; retrying creates another attempt rather than overwriting a failed one. The browser supplies only an order ID, provider choice and idempotency key. The server reads the immutable order total and customer email.
 

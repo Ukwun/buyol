@@ -36,7 +36,7 @@ export async function initializePayment(customerId: string, rawInput: unknown) {
     const attempt = { id: existing.docs[0].id, ...existing.docs[0].data() } as PaymentAttemptDocument;
     if (attempt.status === "requires_action" && attempt.safeProviderMetadata?.checkoutUrl) return { paymentId: attempt.id, checkoutUrl: String(attempt.safeProviderMetadata.checkoutUrl), provider, reference: attempt.internalReference };
   }
-  const paymentId = db.collection("payments").doc().id; const now = Timestamp.now(); const internalReference = `buyol_${order.id}_${provider}_${paymentId}`;
+  const paymentId = db.collection("payments").doc().id; const now = Timestamp.now(); const internalReference = `buylo_${order.id}_${provider}_${paymentId}`;
   const attempt: PaymentAttemptDocument = { id: paymentId, parentOrderId: order.id, customerId, provider, idempotencyKey: input.idempotencyKey, internalReference, amount: order.total, status: "initializing", createdAt: now, updatedAt: now, expiresAt: Timestamp.fromMillis(Date.now() + PAYMENT_EXPIRY_MS) };
   await db.collection("payments").doc(paymentId).set({ ...attempt, id: undefined });
   try {
