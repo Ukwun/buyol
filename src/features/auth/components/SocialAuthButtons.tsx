@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup } from "firebase/auth";
 import { Alert } from "@/components/feedback";
 import { Button } from "@/components/ui";
 import { getSafeRedirectPath } from "@/lib/auth/redirect";
@@ -26,7 +26,6 @@ export function SocialAuthButtons() {
       if (!syncResponse.ok) throw new Error("Unable to prepare your account.");
       const sessionResponse = await fetch("/api/auth/session", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ idToken }) });
       if (!sessionResponse.ok) throw new Error("Unable to create a secure session.");
-      await signOut(getFirebaseAuth());
       window.location.assign(getSafeRedirectPath(new URLSearchParams(window.location.search).get("redirect")));
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "This sign-in provider is unavailable.");

@@ -34,6 +34,12 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/vendorOrders/$(vendorOrderId)).data.customerId == request.auth.uid;
     }
 
+    function canAccessConversation(conversationId) {
+      return signedIn()
+        && (get(/databases/$(database)/documents/conversations/$(conversationId)).data.customerId == request.auth.uid
+          || hasVendorPermission(get(/databases/$(database)/documents/conversations/$(conversationId)).data.vendorId, 'manageSupport'));
+    }
+
     match /users/{userId} {
       allow read: if ownsUser(userId) || isAdmin();
       allow update: if ownsUser(userId)
@@ -225,6 +231,15 @@ service cloud.firestore {
       allow read: if isAdmin()
         || (signedIn() && resource.data.customerId == request.auth.uid)
         || (resource.data.vendorId != null && hasVendorPermission(resource.data.vendorId, 'manageSupport'));
+    }
+
+    match /conversations/{conversationId} {
+      allow get, list: if signedIn()
+        && (resource.data.customerId == request.auth.uid
+          || hasVendorPermission(resource.data.vendorId, 'manageSupport'));
+      match /messages/{messageId} {
+        allow read: if canAccessConversation(conversationId);
+      }
     }
 
     match /disputes/{disputeId} {

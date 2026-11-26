@@ -57,6 +57,8 @@ const baseData = {
   commissions: { commission: { id: "commission", vendorId: "vendor-a", vendorOrderId: "vendor-order-a", parentOrderId: "order-alice" } },
   settlements: { settlement: { id: "settlement", vendorId: "vendor-a", status: "pending" } },
   auditLogs: { audit: { id: "audit", actorType: "system", action: "test", resourceType: "test", resourceId: "test" } },
+  conversations: { "alice__vendor-a__published": { id: "alice__vendor-a__published", customerId: "alice", vendorId: "vendor-a", listingId: "published", participantIds: ["alice", "vendor-a"], status: "active", unreadCounts: { alice: 0, "vendor-a": 0 } } },
+  "conversations/alice__vendor-a__published/messages": { message: { id: "message", conversationId: "alice__vendor-a__published", senderId: "alice", senderRole: "customer", body: "Hello", createdAt: { seconds: 1, nanoseconds: 0 } } },
 };
 
 async function seedData(): Promise<void> {
@@ -121,6 +123,18 @@ describe("Firestore rules", () => {
     await assertSucceeds(alice.doc("fulfillmentAddresses/address-a").get());
     await assertFails(vendorOwner.doc("fulfillmentAddresses/address-a").get());
     await assertFails(alice.doc("fulfillmentAddresses/address-b").get());
+  });
+
+  it("restricts buyer and vendor messaging to the order participants", async () => {
+    const alice = dbFor("alice");
+    const vendorOwner = dbFor("vendor-owner");
+    const bob = dbFor("bob");
+    await assertSucceeds(alice.doc("conversations/alice__vendor-a__published").get());
+    await assertSucceeds(vendorOwner.doc("conversations/alice__vendor-a__published").get());
+    await assertSucceeds(vendorOwner.doc("conversations/alice__vendor-a__published/messages/message").get());
+    await assertFails(bob.doc("conversations/alice__vendor-a__published").get());
+    await assertFails(bob.doc("conversations/alice__vendor-a__published/messages/message").get());
+    await assertFails(alice.doc("conversations/alice__vendor-a__published/messages/forged").set({ body: "forged" }));
   });
 
   it("does not let clients mutate operational or financial records", async () => {

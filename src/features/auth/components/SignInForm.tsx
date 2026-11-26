@@ -48,7 +48,6 @@ export function SignInForm() {
       });
       if (!sessionResponse.ok) throw new Error("Unable to create a secure session.");
 
-      await signOut(auth);
       const redirectTo = getSafeRedirectPath(new URLSearchParams(window.location.search).get("redirect"));
       window.location.assign(redirectTo);
     } catch {

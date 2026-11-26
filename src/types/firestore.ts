@@ -23,6 +23,31 @@ export interface UserDocument {
   updatedAt: FirestoreTimestamp;
 }
 
+export type ConversationStatus = "active" | "closed";
+
+export interface ConversationDocument {
+  id: string;
+  customerId: string;
+  vendorId: string;
+  listingId: string;
+  participantIds: string[];
+  status: ConversationStatus;
+  unreadCounts: Record<string, number>;
+  lastMessagePreview?: string;
+  lastMessageAt?: FirestoreTimestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
+}
+
+export interface MessageDocument {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  senderRole: "customer" | "vendor";
+  body: string;
+  createdAt: FirestoreTimestamp;
+}
+
 export interface VendorPermissions {
   manageStore: boolean;
   manageCatalog: boolean;

@@ -12,12 +12,14 @@ export const navigation = {
   account: [
     { label: "Overview", href: "/account" },
     { label: "Orders", href: "/account/orders" },
+    { label: "Messages", href: "/account/messages" },
   ],
   vendor: [
     { label: "Overview", href: "/vendor" },
     { label: "Products", href: "/vendor/products" },
     { label: "Inventory", href: "/vendor/inventory" },
     { label: "Orders", href: "/vendor/orders" },
+    { label: "Messages", href: "/vendor/messages" },
   ],
   admin: [
     { label: "Overview", href: "/admin" },
