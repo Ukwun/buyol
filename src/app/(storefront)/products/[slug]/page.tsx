@@ -10,7 +10,6 @@ import { ConversationPanel } from "@/features/messaging/components";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Product | BUYLO" };
-export const instant = false;
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   await connection();
