@@ -5,7 +5,10 @@
 .splash span { color: rgba(255,255,255,.72); }
 .logoWrap { position: relative; animation: logoReveal 850ms cubic-bezier(.2,.8,.2,1) both; filter: drop-shadow(0 1.5rem 2rem rgba(5,20,100,.42)); }
 .logoWrap::before { position: absolute; inset: 12%; z-index: -1; border-radius: 50%; background: rgba(255,255,255,.18); content: ""; filter: blur(2rem); }
-.onboarding { display: flex; min-height: 100svh; flex-direction: column; justify-content: space-between; padding: clamp(var(--space-5), 5vw, var(--space-10)) max(var(--gutter-inline), 5vw); overflow: hidden; }
+.onboarding { position: relative; display: flex; min-height: 100svh; flex-direction: column; justify-content: space-between; padding: clamp(var(--space-5), 5vw, var(--space-10)) max(var(--gutter-inline), 5vw); overflow: hidden; isolation: isolate; }
+.visual { position: absolute; z-index: -1; top: 0; right: 0; bottom: 0; width: min(64vw, 64rem); overflow: hidden; }
+.visual::after { position: absolute; inset: 0; background: linear-gradient(90deg, var(--color-brand-secondary) 0%, rgba(8, 24, 74, .78) 18%, rgba(8, 24, 74, .08) 72%), linear-gradient(0deg, rgba(8, 24, 74, .55), transparent 32%); content: ""; }
+.visual img { object-fit: cover; object-position: right center; opacity: .9; }
 .topbar,.bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
 .brand { display: inline-flex; align-items: center; gap: var(--space-2); color: white; text-decoration: none; }
 .brand img { display: block; width: 2.75rem; height: 2.75rem; object-fit: contain; }
@@ -31,5 +34,5 @@
 @keyframes reveal { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
 @keyframes logoReveal { from { opacity: 0; transform: translateY(1rem) scale(.92); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes slideIn { from { opacity: 0; transform: translateX(2rem); } to { opacity: 1; transform: translateX(0); } }
-@media (max-width: 36rem) { .onboarding { padding: var(--space-5); }.content h1 { font-size: clamp(2.5rem, 13vw, 4rem); }.bottom { align-items: end; } }
+@media (max-width: 36rem) { .onboarding { padding: var(--space-5); }.visual { width: 100%; opacity: .58; }.visual::after { background: linear-gradient(90deg, rgba(8, 24, 74, .96), rgba(8, 24, 74, .48)), linear-gradient(0deg, rgba(8, 24, 74, .82), transparent 50%); }.content h1 { font-size: clamp(2.5rem, 13vw, 4rem); }.bottom { align-items: end; } }
 @media (prefers-reduced-motion: reduce) { .splash,.content,.logoWrap { animation: none; } .next,.primary,.dot,.activeDot { transition: none; } }
